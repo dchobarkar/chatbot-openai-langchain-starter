@@ -6,6 +6,8 @@ import chatRoute from "./routes/chat.js";
 import uploadRoute from "./routes/upload.js";
 import chatDocRoute from "./routes/chat-doc.js";
 
+process.env.LANGCHAIN_HANDLER = "console";
+
 dotenv.config();
 
 const app = express();
