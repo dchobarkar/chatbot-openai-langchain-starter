@@ -13,11 +13,14 @@
   "license": "ISC",
   "packageManager": "pnpm@10.9.0",
   "dependencies": {
+    "@langchain/community": "^0.3.42",
     "@langchain/openai": "^0.5.10",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "langchain": "^0.3.24",
-    "openai": "^4.98.0"
+    "multer": "1.4.5-lts.2",
+    "openai": "^4.98.0",
+    "pdf-parse": "^1.1.1"
   }
 }

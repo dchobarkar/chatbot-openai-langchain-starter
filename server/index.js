@@ -3,6 +3,8 @@ import dotenv from "dotenv";
 import cors from "cors";
 
 import chatRoute from "./routes/chat.js";
+import uploadRoute from "./routes/upload.js";
+import chatDocRoute from "./routes/chat-doc.js";
 
 dotenv.config();
 
@@ -17,6 +19,8 @@ app.use(
 app.use(express.json());
 
 app.use("/chat", chatRoute);
+app.use("/upload", uploadRoute);
+app.use("/chat-doc", chatDocRoute);
 
 app.get("/", (req, res) => {
   res.send("Chatbot backend is running");
