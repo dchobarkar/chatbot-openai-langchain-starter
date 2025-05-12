@@ -19,6 +19,7 @@ This is a full-stack chatbot built using Node.js, Express, LangChain, and React 
 
 ## Folder Structure
 
+```plaintext
 /chatbot-openai-langchain-starter
 |-- client/ # React frontend
 |-- server/ # Express + LangChain backend
@@ -27,6 +28,7 @@ This is a full-stack chatbot built using Node.js, Express, LangChain, and React 
 | |-- memory/
 |-- .env # For API keys (ignored in Git)
 |-- README.md` ``
+```
 
 ## License
 
