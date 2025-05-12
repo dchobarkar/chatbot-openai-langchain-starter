@@ -11,6 +11,7 @@ function App() {
 
   const sendMessage = async () => {
     if (!input.trim()) return;
+
     const userMessage = { sender: "user", text: input };
     setMessages([...messages, userMessage]);
     setInput("");
@@ -22,14 +23,17 @@ function App() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: input, sessionId }),
       });
+      if (!res.ok) throw new Error("API failed");
+
       const data = await res.json();
       const botMessage = { sender: "bot", text: data.response };
       setMessages((prev) => [...prev, botMessage]);
     } catch (err) {
-      console.log(err);
-      alert("Something went wrong");
-    } finally {
-      setLoading(false);
+      console.error(err);
+      setMessages((prev) => [
+        ...prev,
+        { sender: "bot", text: "⚠️ Something went wrong. Please try again." },
+      ]);
     }
   };
 
@@ -58,9 +62,19 @@ function App() {
             </div>
           ))}
           {loading && (
-            <div className="text-sm italic text-gray-500">Bot is typing...</div>
+            <div className="text-left text-sm italic text-gray-500">
+              Bot is typing...
+            </div>
           )}
         </div>
+
+        <button
+          onClick={() => setMessages([])}
+          className="text-sm text-red-500 underline ml-auto block mt-1"
+        >
+          Clear Chat
+        </button>
+
         <div className="flex items-center gap-2">
           <input
             className="flex-1 border rounded px-3 py-2 text-black"
