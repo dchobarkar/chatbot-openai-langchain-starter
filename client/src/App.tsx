@@ -7,6 +7,7 @@ function App() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const sessionId = "demo-session";
+  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3001/chat";
 
   const sendMessage = async () => {
     if (!input.trim()) return;
@@ -16,7 +17,7 @@ function App() {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:3001/chat", {
+      const res = await fetch(apiUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: input, sessionId }),
@@ -62,7 +63,7 @@ function App() {
         </div>
         <div className="flex items-center gap-2">
           <input
-            className="flex-1 border rounded px-3 py-2"
+            className="flex-1 border rounded px-3 py-2 text-black"
             placeholder="Type a message..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
