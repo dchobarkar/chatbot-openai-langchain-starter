@@ -1,22 +1,39 @@
-import { BufferMemory } from "langchain/memory";
+import {
+  ConversationBufferMemory,
+  ConversationSummaryMemory,
+} from "langchain/memory";
+import { ChatOpenAI } from "@langchain/openai";
 
 const memoryStore = new Map();
 
 export function getMemory(sessionId, strategy = "buffer") {
   if (!memoryStore.has(sessionId)) {
+    let memory;
+
     switch (strategy) {
       case "buffer":
-        memoryStore.set(sessionId, new BufferMemory());
+        memory = new ConversationBufferMemory();
         break;
 
-      // Placeholder for other types like:
-      // case 'summary':
-      // case 'entity':
-      // Add later...
+      case "summary":
+        const llm = new ChatOpenAI({
+          temperature: 0.7,
+          modelName: "gpt-3.5-turbo",
+          apiKey: process.env.OPENAI_API_KEY,
+        });
+
+        memory = new ConversationSummaryMemory({
+          llm,
+          memoryKey: "chat_history",
+          returnMessages: true,
+        });
+        break;
 
       default:
         throw new Error(`Unknown memory strategy: ${strategy}`);
     }
+
+    memoryStore.set(sessionId, memory);
   }
 
   return memoryStore.get(sessionId);
