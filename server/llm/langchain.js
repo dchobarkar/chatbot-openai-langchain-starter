@@ -3,6 +3,7 @@ import { LLMChain } from "langchain/chains";
 import { ChatOpenAI } from "@langchain/openai";
 
 import { getMemory } from "./memoryRegistry.js";
+import { queryMemory, storeMemory } from "./longTermMemory.js";
 
 const chainStore = new Map();
 
@@ -35,9 +36,14 @@ Assistant:
 export async function runChat(
   input,
   sessionId = "default",
-  strategy = "buffer"
+  strategy = "summary"
 ) {
   const chain = getChain(sessionId, strategy);
-  const result = await chain.call({ input });
+
+  const priorKnowledge = await queryMemory(input);
+  const result = await chain.call({ input: `${priorKnowledge}\n${input}` });
+
+  await storeMemory(`User said: ${input}\nBot replied: ${result.text}`);
+
   return result.text;
 }
