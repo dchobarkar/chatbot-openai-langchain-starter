@@ -1,6 +1,7 @@
 import {
   ConversationBufferMemory,
   ConversationSummaryMemory,
+  ConversationEntityMemory,
 } from "langchain/memory";
 import { ChatOpenAI } from "@langchain/openai";
 
@@ -16,14 +17,28 @@ export function getMemory(sessionId, strategy = "buffer") {
         break;
 
       case "summary":
-        const llm = new ChatOpenAI({
+        const llmS = new ChatOpenAI({
           temperature: 0.7,
           modelName: "gpt-3.5-turbo",
           apiKey: process.env.OPENAI_API_KEY,
         });
 
         memory = new ConversationSummaryMemory({
-          llm,
+          llmS,
+          memoryKey: "chat_history",
+          returnMessages: true,
+        });
+        break;
+
+      case "entity":
+        const llmE = new ChatOpenAI({
+          temperature: 0.7,
+          modelName: "gpt-3.5-turbo",
+          apiKey: process.env.OPENAI_API_KEY,
+        });
+
+        memory = new ConversationEntityMemory({
+          llmE,
           memoryKey: "chat_history",
           returnMessages: true,
         });
