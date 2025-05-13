@@ -1,12 +1,14 @@
 import { useState } from "react";
 
+import { getSessionId } from "./utils/session.js";
+
 function App() {
   const [messages, setMessages] = useState<{ sender: string; text: string }[]>(
     []
   );
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const sessionId = "demo-session";
+  const sessionId = getSessionId();
   const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3001/chat";
 
   const sendMessage = async () => {
@@ -34,11 +36,9 @@ function App() {
         ...prev,
         { sender: "bot", text: "⚠️ Something went wrong. Please try again." },
       ]);
+    } finally {
+      setLoading(false);
     }
-  };
-
-  const handleKeyPress = (e: { key: string }) => {
-    if (e.key === "Enter") sendMessage();
   };
 
   return (
@@ -68,20 +68,13 @@ function App() {
           )}
         </div>
 
-        <button
-          onClick={() => setMessages([])}
-          className="text-sm text-red-500 underline ml-auto block mt-1"
-        >
-          Clear Chat
-        </button>
-
         <div className="flex items-center gap-2">
           <input
             className="flex-1 border rounded px-3 py-2 text-black"
             placeholder="Type a message..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleKeyPress}
+            onKeyDown={(e) => e.key === "Enter" && sendMessage()}
           />
           <button
             onClick={sendMessage}
@@ -90,6 +83,13 @@ function App() {
             Send
           </button>
         </div>
+
+        <button
+          onClick={() => setMessages([])}
+          className="text-sm text-red-500 underline ml-auto block mt-1"
+        >
+          Clear Chat
+        </button>
       </div>
     </div>
   );
