@@ -5,6 +5,7 @@ import cors from "cors";
 import chatRoute from "./routes/chat.js";
 import uploadRoute from "./routes/upload.js";
 import chatDocRoute from "./routes/chat-doc.js";
+import debugRoute from "./routes/debug.js";
 
 process.env.LANGCHAIN_HANDLER = "console";
 
@@ -23,6 +24,7 @@ app.use(express.json());
 app.use("/chat", chatRoute);
 app.use("/upload", uploadRoute);
 app.use("/chat-doc", chatDocRoute);
+app.use("/debug", debugRoute);
 
 app.get("/", (req, res) => {
   res.send("Chatbot backend is running");
