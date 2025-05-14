@@ -48,5 +48,14 @@ export async function runChat(
   }
 
   const result = await chain.call({ input });
+
+  // Debug: Print memory state
+  if (chain.memory && chain.memory.loadMemoryVariables) {
+    const memoryState = await chain.memory.loadMemoryVariables();
+    console.log("\n[DEBUG] Memory State:", memoryState);
+    console.log("User Input:", input);
+    console.log("Bot Output:", result.text);
+  }
+
   return result.text;
 }
