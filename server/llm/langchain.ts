@@ -1,10 +1,9 @@
-import { PromptTemplate } from "langchain/prompts";
+import { PromptTemplate } from "@langchain/core/prompts";
 import { LLMChain } from "langchain/chains";
 import { ChatOpenAI } from "@langchain/openai";
 
 import { getHybridChain } from "./hybridChain.js";
 import { getMemory } from "./memoryRegistry.js";
-import { queryMemory, storeMemory } from "./longTermMemory.js";
 
 const chainStore = new Map();
 

@@ -1,13 +1,12 @@
-import { ChatOpenAI } from "@langchain/openai";
+import { ChatOpenAI, OpenAIEmbeddings } from "@langchain/openai";
 import { ConversationChain } from "langchain/chains";
 import {
   ConversationBufferMemory,
   ConversationEntityMemory,
 } from "langchain/memory";
-import { SupabaseVectorStore } from "langchain/vectorstores/supabase";
-import { OpenAIEmbeddings } from "@langchain/openai";
+import { SupabaseVectorStore } from "@langchain/community/vectorstores/supabase";
 
-import { supabase } from "../libs/supabaseClient.js";
+import { supabase } from "./supabaseClient.js";
 
 const chainStore = new Map();
 
@@ -83,6 +82,7 @@ AI:
     },
   });
 
-  chainStore.set(sessionId, chain);
-  return chain;
+  // Store all objects for external access
+  chainStore.set(sessionId, { chain, bufferMemory, entityMemory });
+  return chainStore.get(sessionId);
 }
