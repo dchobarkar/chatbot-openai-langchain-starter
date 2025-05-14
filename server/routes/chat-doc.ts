@@ -1,12 +1,15 @@
-import express from "express";
+import express, { Request, Response } from "express";
 
 import { askDocQuestion } from "../llm/retriever.js";
 
 const router = express.Router();
 
-router.post("/", async (req, res) => {
+router.post("/", async (req: Request, res: Response) => {
   const { message } = req.body;
-  if (!message) return res.status(400).json({ error: "Message required" });
+
+  if (!message || !message.trim())
+    return res.status(400).json({ error: "Message is required" });
+
   try {
     const response = await askDocQuestion(message);
     res.json({ response });

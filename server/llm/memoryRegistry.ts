@@ -1,44 +1,41 @@
-import {
-  ConversationBufferMemory,
-  ConversationSummaryMemory,
-  ConversationEntityMemory,
-} from "langchain/memory";
 import { ChatOpenAI } from "@langchain/openai";
+import { ConversationBufferMemory } from "langchain/memory/buffer";
+import { ConversationSummaryMemory } from "langchain/memory/summary";
+import { ConversationEntityMemory } from "langchain/memory/entity";
 
-const memoryStore = new Map();
+const memoryStore = new Map<string, any>();
 
-export function getMemory(sessionId, strategy = "buffer") {
+export function getMemory(sessionId: string, strategy: string = "buffer") {
   if (!memoryStore.has(sessionId)) {
     let memory;
 
     switch (strategy) {
       case "buffer":
-        memory = new ConversationBufferMemory();
+        memory = new ConversationBufferMemory({
+          memoryKey: "chat_history",
+          returnMessages: true,
+        });
         break;
 
       case "summary":
-        const llmS = new ChatOpenAI({
-          temperature: 0.7,
-          modelName: "gpt-3.5-turbo",
-          apiKey: process.env.OPENAI_API_KEY,
-        });
-
         memory = new ConversationSummaryMemory({
-          llmS,
+          llm: new ChatOpenAI({
+            temperature: 0.7,
+            modelName: "gpt-3.5-turbo",
+            apiKey: process.env.OPENAI_API_KEY,
+          }),
           memoryKey: "chat_history",
           returnMessages: true,
         });
         break;
 
       case "entity":
-        const llmE = new ChatOpenAI({
-          temperature: 0.7,
-          modelName: "gpt-3.5-turbo",
-          apiKey: process.env.OPENAI_API_KEY,
-        });
-
         memory = new ConversationEntityMemory({
-          llmE,
+          llm: new ChatOpenAI({
+            temperature: 0.7,
+            modelName: "gpt-3.5-turbo",
+            apiKey: process.env.OPENAI_API_KEY,
+          }),
           memoryKey: "chat_history",
           returnMessages: true,
         });
