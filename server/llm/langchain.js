@@ -2,6 +2,7 @@ import { PromptTemplate } from "langchain/prompts";
 import { LLMChain } from "langchain/chains";
 import { ChatOpenAI } from "@langchain/openai";
 
+import { getHybridChain } from "./hybridChain.js";
 import { getMemory } from "./memoryRegistry.js";
 import { queryMemory, storeMemory } from "./longTermMemory.js";
 
@@ -36,14 +37,16 @@ Assistant:
 export async function runChat(
   input,
   sessionId = "default",
-  strategy = "summary"
+  strategy = "hybrid"
 ) {
-  const chain = getChain(sessionId, strategy);
+  let chain;
 
-  const priorKnowledge = await queryMemory(input);
-  const result = await chain.call({ input: `${priorKnowledge}\n${input}` });
+  if (strategy === "hybrid") {
+    chain = await getHybridChain(sessionId);
+  } else {
+    chain = getChain(sessionId, strategy);
+  }
 
-  await storeMemory(`User said: ${input}\nBot replied: ${result.text}`);
-
+  const result = await chain.call({ input });
   return result.text;
 }
