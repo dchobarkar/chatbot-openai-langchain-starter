@@ -1,4 +1,4 @@
-export const getSessionId = () => {
+export const getSessionId = (): string => {
   let id = localStorage.getItem("chat_session_id");
 
   if (!id) {
